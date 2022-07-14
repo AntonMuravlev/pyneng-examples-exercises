@@ -27,4 +27,30 @@ Out[4]: 'Interface                  IP-Address      OK? Method Status           
 
 """
 
-device_params = {"device_type": "cisco_ios", "host": "192.168.100.1"}
+from base_connect_class import BaseSSH
+
+class CiscoSSH(BaseSSH):
+    def __init__(self, **device_params):
+        if device_params.get("username") == None:
+            device_params["username"] = input("Введите имя пользователя: ")
+        if device_params.get("password") == None:
+            device_params["password"] = input("Введите пароль: ")
+        if device_params.get("secret") == None:
+            device_params["secret"] = input("Введите пароль для режима enable: ")
+        super().__init__(**device_params)
+        self.ssh.enable()
+
+if __name__ == "__main__":
+#    device_params = {
+#        "device_type": "cisco_ios",
+#        "ip": "192.168.122.101",
+#        "username": "cisco",
+#        "password": "cisco",
+#        "secret": "cisco",
+#    }
+
+    device_params = {"device_type": "cisco_ios", "host": "192.168.122.101"}
+    r1 = CiscoSSH(**device_params)
+    print(r1.ssh.find_prompt())
+
+

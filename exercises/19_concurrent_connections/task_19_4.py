@@ -105,3 +105,53 @@ R3#
 
 Для выполнения задания можно создавать любые дополнительные функции.
 """
+
+import yaml
+from netmiko import ConnectHandler
+from concurrent.futures import ThreadPoolExecutor
+
+def send_show_command(device, command):
+    with ConnectHandler(**device) as ssh:
+        ssh.enable()
+        output = f"{ssh.find_prompt()}{command}\n{ssh.send_command(command)}\n"
+        return output
+
+def send_config_commands(device, commands):
+    with ConnectHandler(**device) as ssh:
+        ssh.enable()
+        output = ssh.send_config_set(commands)
+        return output
+
+def send_commands(device, *, show=None, config=None):
+    if show and config:
+        raise ValueError("Please input show or config cmds")
+        return
+    if show:
+        output = send_show_command(device, show)
+    elif config:
+        output = send_config_commands(device, config)
+    return output
+
+def send_commands_to_devices(devices, filename, *, show=None, config=None, limit=3):
+    with ThreadPoolExecutor(max_workers=limit) as executor:
+        future_list =[]
+        for dev in devices:
+            if show and config:
+                raise ValueError("Please input show or config cmds")
+                return
+            if show:
+                future = executor.submit(send_show_command, dev, show)
+            elif config:
+                future = executor.submit(send_config_commands, dev, config)
+            future_list.append(future)
+    with open(filename, "w") as f:
+        for future in future_list:
+            f.write("\n" + future.result())
+
+if __name__ == "__main__":
+    commands = ['router ospf 55', 'network 0.0.0.0 255.255.255.255 area 0']
+
+    with open("devices.yaml") as f:
+        devices = yaml.safe_load(f)
+#    send_commands_to_devices(devices, "task_4_result.txt", config=commands)
+    send_commands_to_devices(devices, "task_4_result.txt", show="show version")

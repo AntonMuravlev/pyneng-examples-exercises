@@ -23,3 +23,19 @@
 а не ввод пользователя.
 
 """
+
+import re
+
+
+def get_ip_from_cfg(file_name):
+    regex = re.compile(r" ip address (?P<ip>([\d.])+) (?P<mask>([\d.])+)")
+    out_list = []
+    with open(file_name) as f:
+        content = f.read()
+        for m in regex.finditer(content):
+            out_list.append(m.group("ip", "mask"))
+    return out_list
+
+
+if __name__ == "__main__":
+    print(get_ip_from_cfg("config_r1.txt"))

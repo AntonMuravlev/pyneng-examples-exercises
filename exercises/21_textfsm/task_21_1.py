@@ -16,19 +16,25 @@
 
 """
 from netmiko import ConnectHandler
+from pprint import pprint
+import textfsm
+import yaml
 
+def parse_command_output(template, command_output):
+    with open(template) as t:
+        fsm = textfsm.TextFSM(t)
+        result = fsm.ParseText(command_output)
+    return [fsm.header] + result
 
 # вызов функции должен выглядеть так
 if __name__ == "__main__":
-    r1_params = {
-        "device_type": "cisco_ios",
-        "host": "192.168.100.1",
-        "username": "cisco",
-        "password": "cisco",
-        "secret": "cisco",
-    }
-    with ConnectHandler(**r1_params) as r1:
-        r1.enable()
-        output = r1.send_command("sh ip int br")
-    result = parse_command_output("templates/sh_ip_int_br.template", output)
+#    with open('devices.yaml') as f:
+#        dev_params = yaml.safe_load(f)[0]
+#    with ConnectHandler(**dev_params) as ssh:
+#        ssh.enable()
+#        output = ssh.send_command("sh ip int br")
+    with open("output/sh_ip_dhcp_snooping.txt") as f:
+        output = f.read()
+    template = "templates/sh_ip_dhcp_snooping.template"
+    result = parse_command_output(template, output)
     print(result)

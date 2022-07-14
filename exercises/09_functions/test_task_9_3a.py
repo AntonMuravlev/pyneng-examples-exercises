@@ -4,8 +4,11 @@ import task_9_3a
 
 sys.path.append("..")
 
-from pyneng_common_functions import (check_function_exists,
-                                     check_function_params, check_pytest)
+from pyneng_common_functions import (
+    check_function_exists,
+    check_function_params,
+    check_pytest,
+)
 
 
 check_pytest(__loader__, __file__)

@@ -24,3 +24,21 @@ R6           Fa 0/2          143           R S I           2811       Fa 0/0
 
 Проверить работу функции на содержимом файла sh_cdp_n_sw1.txt
 """
+
+import re
+def parse_sh_cdp_neighbors(cdp_string):
+    regex = re.compile(
+    r"(?P<neig_name>\S+) + (?P<local_int>\S+ \S+).*? (?P<rem_int>\S+ [\d/]+)"
+    )
+    sysname = re.search(r"(?P<sysname>\S+)>show cdp.*",
+            cdp_string).group("sysname")
+    out_dict = {}
+    out_dict = {sysname : {m.group("local_int"): {m.group('neig_name'):
+        m.group('rem_int')} for m in
+        regex.finditer(cdp_string)}}
+    return out_dict
+
+if __name__ == "__main__":
+    with open("sh_cdp_n_sw1.txt") as f:
+        content = f.read()
+        print(parse_sh_cdp_neighbors(content))

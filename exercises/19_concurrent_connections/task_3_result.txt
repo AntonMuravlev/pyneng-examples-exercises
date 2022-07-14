@@ -1,0 +1,16 @@
+
+csr1#sh ip int br
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet1       10.0.0.15       YES manual up                    up      
+GigabitEthernet2       unassigned      YES unset  administratively down down    
+GigabitEthernet3       unassigned      YES unset  administratively down down    
+
+csr2#sh int desc
+Interface                      Status         Protocol Description
+Gi1                            up             up       
+Gi2                            admin down     down     
+Gi3                            admin down     down     
+Gi4                            admin down     down     
+
+csr3#sh run | s ^router ospf
+

@@ -30,3 +30,29 @@ Out[1]: '11111111111111111111111111110000'
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
+
+prefix_str = input("Input ip address like 10.1.1.0/24: " )
+subnet_str = prefix_str.split("/")[0]
+mask_str = prefix_str.split("/")[1]
+
+first_oct = int(subnet_str.split(".")[0])
+second_oct = int(subnet_str.split(".")[1])
+third_oct = int(subnet_str.split(".")[2])
+fourth_oct = int(subnet_str.split(".")[3])
+
+mask_bin_str = "1" * int(mask_str) + "0" * (32- int(mask_str))
+first_mask = int(mask_bin_str[:8], 2)
+second_mask = int(mask_bin_str[8:16], 2)
+third_mask = int(mask_bin_str[16:24], 2)
+fourth_mask = int(mask_bin_str[24:32], 2)
+
+print("""
+Network:
+{:<10}{:<10}{:<10}{:<10}
+{:08b}  {:08b}  {:08b}  {:08b}
+
+Mask:
+/{}
+{:<10}{:<10}{:<10}{:<10}
+{:08b}  {:08b}  {:08b}  {:08b}
+""".format(first_oct, second_oct, third_oct, fourth_oct, first_oct, second_oct, third_oct, fourth_oct, mask_str, first_mask, second_mask, third_mask, fourth_mask, first_mask, second_mask, third_mask, fourth_mask))

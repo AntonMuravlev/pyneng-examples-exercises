@@ -17,3 +17,19 @@
 """
 
 ignore = ["duplex", "alias", "configuration"]
+
+from sys import argv
+
+file_source = argv[1]
+file_dest = argv[2]
+
+counter = 0
+
+with open(file_source, "r") as f, open(file_dest, 'w') as dest:
+    for line in f:
+        if line.startswith("!") == False:
+            for bad_command in ignore:
+                if line.find(bad_command) != -1:
+                    break
+                elif ignore[-1] == bad_command:
+                    dest.write(line)

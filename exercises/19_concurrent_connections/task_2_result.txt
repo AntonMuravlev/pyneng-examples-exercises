@@ -1,0 +1,12 @@
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet1       10.0.0.15       YES manual up                    up      
+GigabitEthernet2       unassigned      YES unset  administratively down down    
+GigabitEthernet3       unassigned      YES unset  administratively down down    Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet1       10.0.0.15       YES manual up                    up      
+GigabitEthernet2       unassigned      YES unset  administratively down down    
+GigabitEthernet3       unassigned      YES unset  administratively down down    
+GigabitEthernet4       unassigned      YES unset  administratively down down    Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet1       10.0.0.15       YES manual up                    up      
+GigabitEthernet2       unassigned      YES unset  administratively down down    
+GigabitEthernet3       unassigned      YES unset  administratively down down    
+GigabitEthernet4       unassigned      YES unset  administratively down down    

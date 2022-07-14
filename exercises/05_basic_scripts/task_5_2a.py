@@ -49,3 +49,38 @@ bin_ip = "00001010000000010000000111000011"
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+
+prefix_str = input("Input ip address like 10.1.1.0/24: " )
+subnet_str = prefix_str.split("/")[0]
+mask_str = prefix_str.split("/")[1]
+
+first_oct = int(subnet_str.split(".")[0])
+second_oct = int(subnet_str.split(".")[1])
+third_oct = int(subnet_str.split(".")[2])
+fourth_oct = int(subnet_str.split(".")[3])
+
+bin_ip = "{:08b}{:08b}{:08b}{:08b}".format(first_oct, second_oct, third_oct, fourth_oct)
+
+bin_subnet = bin_ip[:int(mask_str)] + "0"*(32 - int(mask_str))
+
+subnet_first = int(bin_subnet[:8], 2)
+subnet_second = int(bin_subnet[8:16], 2)
+subnet_third = int(bin_subnet[16:24], 2)
+subnet_fourth = int(bin_subnet[24:32], 2)
+
+mask_bin_str = "1" * int(mask_str) + "0" * (32 - int(mask_str))
+first_mask = int(mask_bin_str[:8], 2)
+second_mask = int(mask_bin_str[8:16], 2)
+third_mask = int(mask_bin_str[16:24], 2)
+fourth_mask = int(mask_bin_str[24:32], 2)
+
+print("""
+Network:
+{:<10}{:<10}{:<10}{:<10}
+{:08b}  {:08b}  {:08b}  {:08b}
+
+Mask:
+/{}
+{:<10}{:<10}{:<10}{:<10}
+{:08b}  {:08b}  {:08b}  {:08b}
+""".format(subnet_first, subnet_second, subnet_third, subnet_fourth, subnet_first, subnet_second, subnet_third, subnet_fourth, mask_str, first_mask, second_mask, third_mask, fourth_mask, first_mask, second_mask, third_mask, fourth_mask))

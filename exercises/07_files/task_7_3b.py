@@ -17,3 +17,19 @@ Enter VLAN number: 10
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+
+file_name = "CAM_table.txt"
+
+output_template = "{:<10}{:<20}{}"
+
+mac_string = []
+with open(file_name, "r") as input_file:
+    for line in input_file:
+        if line.find("DYNAMIC") != -1:
+            mac_string.append(line.split())
+
+vlan_number = input("Enter vlan number: ")
+
+for string in mac_string:
+    if vlan_number == string[0]:
+        print(output_template.format(string[0], string[1], string[3]))

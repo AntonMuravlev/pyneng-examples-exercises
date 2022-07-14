@@ -49,10 +49,42 @@ O        10.30.0.0/24 [110/20] via 192.168.100.1, 07:12:03, Ethernet0/0
 Проверить работу функции на устройствах из файла devices.yaml и словаре commands
 """
 
+import yaml
+from netmiko import ConnectHandler
+from netmiko import NetmikoAuthenticationException
+from netmiko import NetmikoTimeoutException
+from itertools import repeat
+from concurrent.futures import ThreadPoolExecutor
+
+def send_show_commands(device, commands):
+    with ConnectHandler(**device) as ssh:
+        ssh.enable()
+        output = ""
+        for command in commands:
+            output += f"{ssh.find_prompt()}{command}\n{ssh.send_command(command)}\n"
+        return output
+
+def send_command_to_devices(devices, commands_dict, filename, limit=3):
+    with ThreadPoolExecutor(max_workers=limit) as executor:
+        future_list =[]
+        for dev in devices:
+            future = executor.submit(
+                    send_show_commands, dev,
+                    commands_dict[dev["host"]]
+                    )
+            future_list.append(future)
+    with open(filename, "w") as f:
+        for future in future_list:
+            f.write("\n" + future.result())
+
+if __name__ == "__main__":
 # Этот словарь нужен только для проверки работа кода, в нем можно менять IP-адреса
 # тест берет адреса из файла devices.yaml
-commands = {
-    "192.168.100.3": ["sh ip int br", "sh ip route | ex -"],
-    "192.168.100.1": ["sh ip int br", "sh int desc"],
-    "192.168.100.2": ["sh int desc"],
-}
+    commands = {
+        "clab-csr_test-csr3": ["sh ip int br", "sh ip route | ex -"],
+        "clab-csr_test-csr1": ["sh ip int br", "sh int desc"],
+        "clab-csr_test-csr2": ["sh int desc"],
+    }
+    with open("devices.yaml") as f:
+        devices = yaml.safe_load(f)
+    send_command_to_devices(devices, commands, "task_3a_result.txt")
